@@ -35,6 +35,7 @@
 - 環境變量配置，無需重新構建鏡像
 - 支持 Docker Compose 簡化部署和管理
 - 支持自訂代理端口
+- 極致的輕量級設計：VPN容器僅 24.4MB，代理容器僅 12.5MB，總計僅 36.9MB
 
 ## 架構說明
 
@@ -107,8 +108,8 @@ docker run --name dyu-vpn \
   -e VPN_PORT=443 \
   -e VPN_USERNAME=你的學號 \
   -e VPN_PASSWORD=你的密碼 \
-  -e PROXY_PORT=114514 \
-  -p 114514:114514 \
+  -e PROXY_PORT=11451 \
+  -p 11451:11451 \
   -it dyu-vpnexus
 ```
 
@@ -116,7 +117,7 @@ docker run --name dyu-vpn \
 
 ### 使用代理服務
 
-啟動容器後，SOCKS5代理會在主機的指定端口（預設 **114514**）提供服務。您可以在各種應用程式中配置此代理：
+啟動容器後，SOCKS5代理會在主機的指定端口（預設 **11451**）提供服務。您可以在各種應用程式中配置此代理：
 
 #### 瀏覽器設置
 
@@ -129,12 +130,12 @@ docker run --name dyu-vpn \
    - 新增代理配置：
      - 代理協議: `SOCKS5`
      - 代理伺服器: `127.0.0.1`
-     - 代理端口: `114514`（或您在.env中設定的PROXY_PORT）
+     - 代理端口: `11451`（或您在.env中設定的PROXY_PORT）
    - 啟用該代理配置
 
 2. **Firefox 內建代理**:
    - 設置 → 網絡設置 → 手動配置代理
-   - SOCKS主機: `127.0.0.1` 端口: `114514`（或您在.env中設定的PROXY_PORT）
+   - SOCKS主機: `127.0.0.1` 端口: `11451`（或您在.env中設定的PROXY_PORT）
    - 選擇 "SOCKS v5"
    - 勾選 "為所有協議使用此代理服務器"
 
@@ -146,19 +147,19 @@ docker run --name dyu-vpn \
 
 - **Windows (PowerShell)**:
   ```powershell
-  $env:all_proxy="socks5://127.0.0.1:114514"
+  $env:all_proxy="socks5://127.0.0.1:11451"
   ```
 
 - **Linux/Mac (Bash)**:
   ```bash
-  export ALL_PROXY=socks5://127.0.0.1:114514
+  export ALL_PROXY=socks5://127.0.0.1:11451
   ```
 
 #### 其他應用
 
 大多數支持代理的應用都可以配置SOCKS5代理：
 - 地址: `127.0.0.1` 或 `localhost`
-- 端口: `114514`（或您在.env中設定的PROXY_PORT）
+- 端口: `11451`（或您在.env中設定的PROXY_PORT）
 - 類型: `SOCKS5`
 
 ### 驗證連接
@@ -192,4 +193,4 @@ docker exec dyu-vpn ping -c 3 <內網地址>
 | TRUSTED_CERT | 1 | 是否信任所有證書 (1=是, 0=否) |
 | SET_DNS | 1 | 是否設置 DNS (1=是, 0=否) |
 | USE_PEERDNS | 1 | 是否使用對等 DNS (1=是, 0=否) |
-| PROXY_PORT | 114514 | SOCKS5 代理端口 |
+| PROXY_PORT | 11451 | SOCKS5 代理端口 |
