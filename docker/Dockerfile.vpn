@@ -1,0 +1,27 @@
+FROM alpine:3.21.3
+
+# Install required dependencies
+RUN apk add --no-cache \
+    git gcc automake autoconf openssl-dev \
+    ppp-dev make musl-dev pkgconfig \
+    openssl ppp gettext
+
+# Clone and compile openfortivpn
+RUN git clone --depth 1 https://github.com/adrienverge/openfortivpn.git /tmp/openfortivpn && \
+    cd /tmp/openfortivpn && \
+    ./autogen.sh && \
+    ./configure --prefix=/usr --sysconfdir=/etc && \
+    make && \
+    make install && \
+    rm -rf /tmp/openfortivpn
+
+# Copy configuration and scripts
+COPY config/vpn.conf.template /etc/openfortivpn/
+COPY scripts/start-vpn.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/start-vpn.sh
+
+# Expose proxy port
+EXPOSE 1080
+
+# Default command
+CMD ["/usr/local/bin/start-vpn.sh"] 

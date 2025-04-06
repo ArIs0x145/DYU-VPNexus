@@ -1,0 +1,8 @@
+host = ${VPN_HOST}
+port = ${VPN_PORT}
+username = ${VPN_USERNAME}
+password = ${VPN_PASSWORD}
+trusted-cert = ${TRUSTED_CERT}
+set-dns = ${SET_DNS:-1}
+use-peerdns = ${USE_PEERDNS:-1}
+persistent = 1 

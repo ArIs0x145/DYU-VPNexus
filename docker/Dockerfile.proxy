@@ -1,0 +1,26 @@
+FROM alpine:3.21.3
+
+# Install required dependencies
+RUN apk add --no-cache \
+    git gcc make musl-dev \
+    netcat-openbsd
+
+# Clone and compile microsocks
+RUN git clone --depth 1 https://github.com/rofl0r/microsocks.git /tmp/microsocks && \
+    cd /tmp/microsocks && \
+    make && \
+    cp microsocks /usr/local/bin/ && \
+    rm -rf /tmp/microsocks
+
+# Environment variables with defaults
+ENV PROXY_PORT=114514
+
+# Expose proxy port
+EXPOSE ${PROXY_PORT}
+
+# Configure health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+    CMD nc -z 127.0.0.1 ${PROXY_PORT} || exit 1
+
+# Default command
+CMD ["sh", "-c", "microsocks -i 0.0.0.0 -p ${PROXY_PORT}"] 

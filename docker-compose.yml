@@ -1,0 +1,77 @@
+name: dyu-vpnexus
+services:
+  vpn:
+    container_name: dyu-vpn
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.vpn
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    # privileged: true
+    devices:
+      - /dev/ppp:/dev/ppp
+    # Environment variables from .env file
+    environment:
+      - VPN_HOST
+      - VPN_PORT
+      - VPN_USERNAME
+      - VPN_PASSWORD
+      - TRUSTED_CERT
+      - SET_DNS
+      - USE_PEERDNS
+      - PROXY_PORT=${PROXY_PORT:-114514}
+    # Expose SOCKS proxy port to host
+    ports:
+      - "${PROXY_PORT:-114514}:${PROXY_PORT:-114514}"
+    restart: unless-stopped
+    # Persist necessary log directories
+    volumes:
+      - ./logs:/var/log/vpn
+    healthcheck:
+      test: ["CMD", "pgrep", "openfortivpn"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - vpn_network
+
+  proxy:
+    container_name: dyu-proxy
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.proxy
+    network_mode: "service:vpn"  # Use VPN container network
+    environment:
+      - PROXY_PORT=${PROXY_PORT:-114514}
+    depends_on:
+      vpn:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "pgrep", "microsocks"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+      
+  # Example: Services that need VPN access
+  # service1:
+  #   image: some-service-image
+  #   network_mode: "service:vpn"  # Use VPN network directly
+  #   depends_on:
+  #     vpn:
+  #       condition: service_healthy
+  
+  # Example: Services that don't need VPN access
+  # service2:
+  #   image: another-service-image
+  #   networks:
+  #     - default  # Use default network, not VPN
+
+networks:
+  default:
+    driver: bridge
+  vpn_network:
+    driver: bridge 
