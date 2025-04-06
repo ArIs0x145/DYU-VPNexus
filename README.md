@@ -23,7 +23,7 @@
 
 ## 簡介
 
-這是一個基於 [OpenFortiVPN](https://github.com/adrienverge/openfortivpn) 的輕量級 Docker 容器，專為連接大葉大學 VPN 而設計。此項目遵循高效率、低體積、最新技術規範的架構設計原則。
+這是一個基於 [OpenFortiVPN](https://github.com/adrienverge/openfortivpn) 的輕量級 Docker 容器，專為連接大葉大學 VPN 而設計。
 
 ## 功能
 
