@@ -1,19 +1,30 @@
-FROM alpine:3.21.3
+FROM alpine:3.21.3 AS builder
 
-# Install required dependencies
+# Install build dependencies
 RUN apk add --no-cache \
-    git gcc make musl-dev \
-    netcat-openbsd
+    git gcc make musl-dev
 
 # Clone and compile microsocks
 RUN git clone --depth 1 https://github.com/rofl0r/microsocks.git /tmp/microsocks && \
     cd /tmp/microsocks && \
-    make && \
-    cp microsocks /usr/local/bin/ && \
-    rm -rf /tmp/microsocks
+    make
+
+# Stage 2: Final lightweight image
+FROM alpine:3.21.3
+
+# Set metadata labels
+LABEL maintainer="DYU-VPNexus Maintainers" \
+      description="Lightweight SOCKS5 proxy for DYU-VPNexus" \
+      version="1.0"
 
 # Environment variables with defaults
-ENV PROXY_PORT=114514
+ENV PROXY_PORT=11451
+
+# Install only runtime dependencies
+RUN apk add --no-cache netcat-openbsd
+
+# Copy compiled binary from builder stage
+COPY --from=builder /tmp/microsocks/microsocks /usr/local/bin/
 
 # Expose proxy port
 EXPOSE ${PROXY_PORT}

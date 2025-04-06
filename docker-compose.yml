@@ -20,10 +20,10 @@ services:
       - TRUSTED_CERT
       - SET_DNS
       - USE_PEERDNS
-      - PROXY_PORT=${PROXY_PORT:-114514}
+      - PROXY_PORT=${PROXY_PORT:-11451}
     # Expose SOCKS proxy port to host
     ports:
-      - "${PROXY_PORT:-114514}:${PROXY_PORT:-114514}"
+      - "${PROXY_PORT:-11451}:${PROXY_PORT:-11451}"
     restart: unless-stopped
     # Persist necessary log directories
     volumes:
@@ -44,7 +44,7 @@ services:
       dockerfile: docker/Dockerfile.proxy
     network_mode: "service:vpn"  # Use VPN container network
     environment:
-      - PROXY_PORT=${PROXY_PORT:-114514}
+      - PROXY_PORT=${PROXY_PORT:-11451}
     depends_on:
       vpn:
         condition: service_healthy
