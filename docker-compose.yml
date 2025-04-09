@@ -25,9 +25,6 @@ services:
     ports:
       - "${PROXY_PORT:-11451}:${PROXY_PORT:-11451}"
     restart: unless-stopped
-    # Persist necessary log directories
-    volumes:
-      - ./logs:/var/log/vpn
     healthcheck:
       test: ["CMD", "pgrep", "openfortivpn"]
       interval: 30s
@@ -74,4 +71,8 @@ networks:
   default:
     driver: bridge
   vpn_network:
-    driver: bridge 
+    driver: bridge
+
+volumes:
+  vpn_logs:
+    driver: local 
