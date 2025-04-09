@@ -17,6 +17,7 @@
 - [簡介](#簡介)
 - [功能](#功能)
 - [架構說明](#架構說明)
+- [Docker安裝指南](#docker-安裝指南)
 - [安裝](#安裝)
 - [使用方法](#使用方法)
 - [配置說明](#配置說明)
@@ -43,6 +44,77 @@
 
 1. **VPN容器**：負責建立和維護VPN連接
 2. **PROXY容器**：提供SOCKS5代理服務，共享VPN容器的網絡
+
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Alpine Linux](https://img.shields.io/badge/Alpine_Linux-0D597F?style=for-the-badge&logo=alpine-linux&logoColor=white)
+
+## Docker安裝指南
+
+在開始使用本項目之前，您需要安裝Docker。根據您的操作系統，請選擇以下安裝方式：
+
+### Windows/macOS用戶
+
+推薦安裝Docker Desktop，它包含了所有必要的組件（Docker Engine、Docker Compose等）：
+
+1. 訪問[Docker Desktop官網](https://www.docker.com/products/docker-desktop/)
+2. 下載適合您操作系統的安裝程序
+3. 按照安裝向導完成安裝
+4. 安裝完成後，啟動Docker Desktop應用
+
+### Linux用戶
+
+您可以選擇安裝Docker Engine（命令行版本）或Docker Desktop（圖形界面版本）：
+
+#### Docker Engine安裝（命令行）
+
+Ubuntu示例：
+```bash
+# 更新套件信息
+sudo apt-get update
+
+# 安裝必要的套件
+sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+
+# 添加Docker官方GPG密鑰
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+# 設置Docker倉庫
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+# 更新套件信息
+sudo apt-get update
+
+# 安裝Docker Engine
+sudo apt-get install docker-ce
+
+# 安裝Docker Compose
+sudo apt-get install docker-compose-plugin
+```
+
+更多Linux發行版的安裝說明，請參考[Docker官方文檔](https://docs.docker.com/engine/install/)
+
+#### Docker Desktop for Linux
+
+1. 訪問[Docker Desktop for Linux](https://docs.docker.com/desktop/install/linux-install/)
+2. 下載適合您Linux發行版的安裝包
+3. 按照指南完成安裝
+
+### 驗證安裝
+
+安裝完成後，請驗證Docker是否正確安裝：
+
+```bash
+# 檢查Docker版本
+docker --version
+
+# 檢查Docker Compose版本
+docker compose version
+
+# 運行測試容器
+docker run hello-world
+```
+
+如果以上命令成功執行，表示Docker已正確安裝並可以使用。
 
 ## 安裝
 
@@ -194,3 +266,11 @@ docker exec dyu-vpn ping -c 3 <內網地址>
 | SET_DNS | 1 | 是否設置 DNS (1=是, 0=否) |
 | USE_PEERDNS | 1 | 是否使用對等 DNS (1=是, 0=否) |
 | PROXY_PORT | 11451 | SOCKS5 代理端口 |
+
+## 相關鏈接
+
+- [Docker 官方文檔](https://docs.docker.com/)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [Alpine Linux 官方網站](https://alpinelinux.org/)
+- [OpenFortiVPN GitHub](https://github.com/adrienverge/openfortivpn)
+- [MicroSocks GitHub](https://github.com/rofl0r/microsocks)
