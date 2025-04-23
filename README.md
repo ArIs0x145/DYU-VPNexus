@@ -1,4 +1,4 @@
-# DYU-VPNexus
+# DYU-VPNexus [已失效]
 
 <div align="center">
 
